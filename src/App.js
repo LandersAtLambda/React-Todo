@@ -1,10 +1,11 @@
-import React from 'react';
-import moment from 'moment';
+import React from "react";
+import moment from "moment";
 
-import TodoList from './components/TodoComponents/TodoList';
-import TodoForm from './components/TodoComponents/TodoForm';
+import TodoList from "./components/TodoComponents/TodoList";
+import TodoForm from "./components/TodoComponents/TodoForm";
 
-import './App.css';
+import "./App.css";
+import AppBar from "./AppBar";
 
 const taskList = [];
 
@@ -13,44 +14,41 @@ class App extends React.Component {
 		super();
 		this.state = {
 			todoList: taskList,
-			todoItem: '',
-			id: '',
-			date: '',
-			completed: ''
+			todoItem: "",
+			id: "",
+			date: "",
+			completed: "",
 		};
 	}
 
 	handleSearch = () => {
-		this.state.todoList.filter(todo => {
+		this.state.todoList.filter((todo) => {
 			if (todo.task.includes(this.todoItem)) {
 				this.setState({
-					todoList: todo
+					todoList: todo,
 				});
 			}
 		});
 	};
 
-	handleChanges = e => {
-		this.setState(
-			{ [e.target.name]: e.target.value },
-			this.updateLocalStorage
-		);
+	handleChanges = (e) => {
+		this.setState({ [e.target.name]: e.target.value }, this.updateLocalStorage);
 	};
 
-	handleCheckbox = index => {
+	handleCheckbox = (index) => {
 		console.log(index);
 		this.setState(
 			{
-				todoList: this.state.todoList.map(todo => {
+				todoList: this.state.todoList.map((todo) => {
 					if (index !== todo.id) {
 						return todo;
 					} else {
 						return {
 							...todo,
-							completed: !todo.completed
+							completed: !todo.completed,
 						};
 					}
-				})
+				}),
 			},
 			this.updateLocalStorage
 		);
@@ -59,23 +57,23 @@ class App extends React.Component {
 	handleClear = () => {
 		this.setState(
 			{
-				todoList: this.state.todoList.filter(todo => {
+				todoList: this.state.todoList.filter((todo) => {
 					if (todo.completed === false) {
 						return todo;
 					} else {
 						return null;
 					}
 					console.log(todo.completed);
-				})
+				}),
 			},
 			this.updateLocalStorage
 		);
 	};
 
-	addNewTodo = e => {
+	addNewTodo = (e) => {
 		e.preventDefault();
-		if (this.state.todoItem === '') {
-			alert('Please enter a Todo');
+		if (this.state.todoItem === "") {
+			alert("Please enter a Todo");
 		} else {
 			this.setState(
 				{
@@ -85,10 +83,10 @@ class App extends React.Component {
 							task: this.state.todoItem,
 							id: Date.now(),
 							completed: false,
-							date: moment().format('MMM Do YYYY')
-						}
+							date: moment().format("MMM Do YYYY"),
+						},
 					],
-					todoItem: ''
+					todoItem: "",
 				},
 				this.updateLocalStorage
 			);
@@ -96,11 +94,11 @@ class App extends React.Component {
 	};
 
 	updateLocalStorage = () => {
-		localStorage.setItem('list', JSON.stringify(this.state.todoList));
+		localStorage.setItem("list", JSON.stringify(this.state.todoList));
 	};
 
 	loadStorage = () => {
-		let value = localStorage.getItem('list');
+		let value = localStorage.getItem("list");
 		value = JSON.parse(value) || [];
 		this.setState({ todoList: value });
 	};
@@ -111,21 +109,21 @@ class App extends React.Component {
 
 	render() {
 		return (
-			<div className="todoApp">
-				<h1>Todo App</h1>
-				<TodoForm
-					handleChanges={this.handleChanges}
-					handleClear={this.handleClear}
-					addNewTodo={this.addNewTodo}
-					todoItem={this.state.todoItem}
-					date={this.state.date}
-					handleSearch={this.handleSearch}
-				/>
-				<TodoList
-					todoList={this.state.todoList}
-					handleCheckbox={this.handleCheckbox}
-				/>
-			</div>
+			<React.Fragment>
+				<AppBar />
+				<div className="todoApp">
+					<h1>Todo App</h1>
+					<TodoForm
+						handleChanges={this.handleChanges}
+						handleClear={this.handleClear}
+						addNewTodo={this.addNewTodo}
+						todoItem={this.state.todoItem}
+						date={this.state.date}
+						handleSearch={this.handleSearch}
+					/>
+					<TodoList todoList={this.state.todoList} handleCheckbox={this.handleCheckbox} />
+				</div>
+			</React.Fragment>
 		);
 	}
 }
