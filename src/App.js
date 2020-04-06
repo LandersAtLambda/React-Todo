@@ -5,7 +5,7 @@ import TodoList from "./components/TodoComponents/TodoList";
 import TodoForm from "./components/TodoComponents/TodoForm";
 
 import "./App.css";
-import AppBar from "./AppBar";
+import AppBar from "./components/AppBar";
 
 const taskList = [];
 
@@ -21,22 +21,11 @@ class App extends React.Component {
 		};
 	}
 
-	handleSearch = () => {
-		this.state.todoList.filter((todo) => {
-			if (todo.task.includes(this.todoItem)) {
-				this.setState({
-					todoList: todo,
-				});
-			}
-		});
-	};
-
 	handleChanges = (e) => {
 		this.setState({ [e.target.name]: e.target.value }, this.updateLocalStorage);
 	};
 
 	handleCheckbox = (index) => {
-		console.log(index);
 		this.setState(
 			{
 				todoList: this.state.todoList.map((todo) => {
@@ -63,7 +52,6 @@ class App extends React.Component {
 					} else {
 						return null;
 					}
-					console.log(todo.completed);
 				}),
 			},
 			this.updateLocalStorage
@@ -111,8 +99,8 @@ class App extends React.Component {
 		return (
 			<React.Fragment>
 				<AppBar />
+				<h1>Todo App</h1>
 				<div className="todoApp">
-					<h1>Todo App</h1>
 					<TodoForm
 						handleChanges={this.handleChanges}
 						handleClear={this.handleClear}
